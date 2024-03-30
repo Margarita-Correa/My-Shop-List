@@ -1,6 +1,19 @@
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useState } from 'react';
+import { Button, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 const App = ()=> {
+
+  const [textItem, setTextItem] = useState("");
+  const [itemList, setItemList]= useState([]);
+
+  const addItem=()=>{
+    setItemList(currentValue =>[
+      ...currentValue, 
+        {id: (Math.random()*10).toString(), value:textItem}
+    ])
+    setTextItem("")
+  }
+  console.log(itemList);
   return (
     <View style={styles.container}>
       <View style={styles.titleView}>
@@ -8,15 +21,24 @@ const App = ()=> {
       </View>
 
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} />
-        <Button title='ADD'/>
+        <TextInput style={styles.input} 
+          onChangeText={(e)=> setTextItem(e)}
+          value ={textItem}
+        />
+        <Button title='ADD' onPress={addItem}/>
       </View>
 
       <View style={styles.taskContainer}>
-        <View style={styles.card}><Text style={styles.taskText}>Pollo</Text></View>
-        <View style={styles.card}><Text style={styles.taskText}>Cuadrada feteada</Text></View>
-        <View style={styles.card}><Text style={styles.taskText}>Bola de lomo</Text></View>
-        <View style={styles.card}><Text style={styles.taskText}>Salmon</Text></View>
+        <FlatList 
+          style={styles.flatlist}
+          data={itemList}
+          keyExtractor={task=> task.id.toString()}
+          renderItem={({item})=>
+          <View  style={styles.card}>
+            <Text style={styles.taskText}>{item.value}</Text>
+          </View>
+          }
+        />
       </View>
     </View>
   );
@@ -32,7 +54,6 @@ const styles = StyleSheet.create({
   inputContainer:{
     flexDirection: "row",
     justifyContent:"center",
-    alignItems: "stretch",
   },
   titleView:{
     flexDirection: "row",
@@ -52,22 +73,24 @@ const styles = StyleSheet.create({
     width:200,
     marginEnd:10,
   },
+  flatlist:{
+    width:"80%"
+  },
   taskContainer:{
     backgroundColor:"#AD88C6",
-    borderWidth:2,
     marginTop:15,
     alignItems:'center',
-    width:"80%",
+    width:"100%",
     paddingVertical:10,
   },
   card:{
     justifyContent: "center",
     alignItems: "center",
     backgroundColor:"#FFEAD2",
-    width:"90%",
+    width:"100%",
     paddingVertical: 15,
     marginVertical:10,
-    borderRadius:10,
+    borderRadius:5,
   },
   taskText:{
     fontWeight: 'bold',
