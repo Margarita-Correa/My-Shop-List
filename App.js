@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { Button, FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Button, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import ModalCustom from './src/components/ModalCustom/Modal';
+import TaskImput from './src/components/TaskImput/TaskImput';
+import ItemList from './src/components/ItemList/ItemList';
 
 const App = ()=> {
 
@@ -42,44 +45,23 @@ const App = ()=> {
         <Text style={styles.title}>MY SHOP LIST</Text>
       </View>
 
-      <View style={styles.inputContainer}>
-        <TextInput style={styles.input} 
-          onChangeText={handleChangeText}
-          value ={textItem}
-        />
-        <Button title='ADD' color="#EEA5A6" onPress={addItem}/>
-      </View>
+      <TaskImput 
+        handleChangeText={handleChangeText}
+        addItem={addItem}
+        textItem={textItem}
+      />
 
-      <View style={styles.taskContainer}>
-        <FlatList 
-          style={styles.flatlist}
-          data={itemList}
-          keyExtractor={task=> task.id.toString()}
-          renderItem={({item})=>
-            <TouchableOpacity style={styles.card} onPress={()=>handleModal(item)}>
-                <Text style={styles.taskText}>{item.value}</Text>
-            </TouchableOpacity>
-          }
-        />
-      </View>
-      
-       <Modal visible={modalVisible} animationType='slide' transparent={true}>
-        <View style={styles.modalStyles}>
-          <View style={styles.modalContainer}>
-            <View style={styles.textContainer}>
-                <Text>Estas seguro que queres  borrar:</Text>
-            </View>
-            <View style={styles.textContainer}>
-                <Text style={styles.textModal}>{itemSelected.value}</Text>
-            </View>
-              <View style={styles.btnContainer}>
-                <Button title="Borrar" color="#E493B3" onPress={handleDelete}/>
-                <Button title="Cancelar" color="#E493B3" onPress={handleCancelModal} />     
-            </View>
-          </View>
-        </View>
+      <ItemList
+        itemList={itemList}
+        handleModal={handleModal}
+      />
 
-      </Modal>
+      <ModalCustom 
+          handleCancelModal={handleCancelModal}
+          handleDelete={handleDelete}
+          modalVisible={modalVisible}
+          itemSelected={itemSelected}
+      />
 
     </View>
   );
@@ -92,10 +74,7 @@ const styles = StyleSheet.create({
     alignItems:"center",
     flex:1,
   },
-  inputContainer:{
-    flexDirection: "row",
-    justifyContent:"center",
-  },
+  
   titleView:{
     flexDirection: "row",
     justifyContent:"center",
@@ -107,58 +86,6 @@ const styles = StyleSheet.create({
   title:{
     fontWeight:'bold',
     fontSize:22,
-  },
-  input:{
-    borderBottomWidth:1,
-    borderBottomColor: "black",
-    width:200,
-    marginEnd:10,
-  },
-  flatlist:{
-    width:"80%"
-  },
-  taskContainer:{
-    backgroundColor:"#AD88C6",
-    marginTop:15,
-    alignItems:'center',
-    width:"100%",
-    paddingVertical:10,
-  },
-  card:{
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor:"#EED3D9",
-    width:"100%",
-    paddingVertical: 15,
-    marginVertical:10,
-    borderRadius:5,
-  },
-  taskText:{
-    fontWeight: 'bold',
-    fontSize:16,
-  },
-  modalStyles:{
-    backgroundColor:"#EED3D9",
-    flex:1,
-    alignItems:"center",
-    justifyContent:"center"
-  },
-  modalContainer:{
-    backgroundColor:"#fcf7f9",
-    width:"80%",
-    paddingVertical:30,
-    alignItems:"center",
-    borderRadius:10,
-  },
-  textContainer:{
-    margin:10,
-  },
-  textModal:{
-    fontWeight:"bold",
-  },
-  btnContainer:{
-    flexDirection:"row",
-    gap:20,
   },
 });
 
